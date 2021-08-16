@@ -16,13 +16,14 @@ const express_1 = __importDefault(require("express"));
 const authrouter = express_1.default.Router();
 const users_1 = __importDefault(require("../models/users"));
 const validate_1 = __importDefault(require("../models/validate"));
-authrouter.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { error } = validate_1.default.validateAsync(req.body, validate_1.default);
+require("joi");
+//const {registervalidation} = require('../models/validate')
+authrouter.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { error } = validate_1.default.validate(req.body);
     if (error)
         return res.send(error);
     const user = new users_1.default({
         name: req.body.name,
-        date: req.body.date,
         email: req.body.email,
         password: req.body.password
     });

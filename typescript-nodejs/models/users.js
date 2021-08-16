@@ -11,10 +11,6 @@ const Userschema = new mongoose_1.default.Schema({
         min: 6,
         max: 255
     },
-    date: {
-        type: Date,
-        default: Date.now
-    },
     email: {
         type: String,
         required: true,

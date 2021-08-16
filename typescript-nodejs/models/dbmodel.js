@@ -7,19 +7,19 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Postschema = new mongoose_1.default.Schema({
     orderNo: {
         type: Number,
-        required: true
+        required: true,
     },
     date: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
     price: {
         type: Number,
-        required: true
+        required: true,
     },
     item: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 });
-exports.default = mongoose_1.default.model('posts', Postschema);
+exports.default = mongoose_1.default.model("posts", Postschema);
