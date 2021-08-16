@@ -7,7 +7,7 @@ import "joi";
 //const {registervalidation} = require('../models/validate')
 authrouter.post("/register", async (req: Request, res: Response) => {
   const { error } =  schema.validate(req.body);
-  if (error) return res.send(error);
+  if (error)  res.send(error.details[0].message);
 
   const user = new Userschema({
     name: req.body.name,

@@ -21,7 +21,7 @@ require("joi");
 authrouter.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { error } = validate_1.default.validate(req.body);
     if (error)
-        return res.send(error);
+        res.send(error.details[0].message);
     const user = new users_1.default({
         name: req.body.name,
         email: req.body.email,
