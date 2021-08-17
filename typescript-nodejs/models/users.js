@@ -9,19 +9,19 @@ const Userschema = new mongoose_1.default.Schema({
         type: String,
         required: true,
         min: 6,
-        max: 255
+        max: 255,
     },
     email: {
         type: String,
         required: true,
         min: 6,
-        max: 255
+        max: 255,
     },
     password: {
         type: String,
         required: true,
         min: 6,
-        max: 1024
-    }
+        max: 1024,
+    },
 });
-exports.default = mongoose_1.default.model('Users', Userschema);
+exports.default = mongoose_1.default.model("Users", Userschema);
