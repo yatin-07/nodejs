@@ -17,8 +17,10 @@ const authrouter = express_1.default.Router();
 const users_1 = __importDefault(require("../models/users"));
 const validate_1 = __importDefault(require("../models/validate"));
 require("joi");
+require("dotenv").config();
 var bcrypt = require("bcryptjs");
 const login_validation_1 = __importDefault(require("../models/login-validation"));
+var jwt = require('jsonwebtoken');
 authrouter.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //validating the data
     const { error } = validate_1.default.validate(req.body);
@@ -59,6 +61,8 @@ authrouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, functi
     const validpassword = yield bcrypt.compare(req.body.password, user.password);
     if (!validpassword)
         return res.status(400).send("invalid password");
+    //token
+    const token = jwt.sign({ _id: user._id }, process.env.token_sec);
     res.send("logged in");
 }));
 exports.default = authrouter;

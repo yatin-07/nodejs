@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
+let counter = 1;
+let CountedId = {type: Number, default: () => counter++};
 const Postschema = new mongoose.Schema({
-  orderNo: {
-    type: Number,
-    required: true,
-  },
+  orderNo: CountedId,
   date: {
     type: Date,
     default: Date.now,

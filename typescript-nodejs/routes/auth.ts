@@ -3,8 +3,10 @@ const authrouter = express.Router();
 import Userschema from "../models/users";
 import schema from "../models/validate";
 import "joi";
+require("dotenv").config();
 var bcrypt = require("bcryptjs");
 import loginschema from "../models/login-validation";
+var jwt = require('jsonwebtoken');
 
 authrouter.post("/register", async (req: Request, res: Response) => {
   //validating the data
@@ -44,6 +46,9 @@ authrouter.post("/login", async (req: Request, res: Response) => {
   //checking the password
   const validpassword = await bcrypt.compare(req.body.password, user.password);
   if (!validpassword) return res.status(400).send("invalid password");
+
+//token
+const token = jwt.sign({ _id: user._id }, process.env.token_sec);
   res.send("logged in");
 });
 export default authrouter;
