@@ -49,6 +49,6 @@ authrouter.post("/login", async (req: Request, res: Response) => {
 
 //token
 const token = jwt.sign({ _id: user._id }, process.env.token_sec);
-  res.send("logged in");
+  res.header('auth-token', token).send(token);
 });
 export default authrouter;
