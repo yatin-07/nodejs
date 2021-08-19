@@ -63,6 +63,6 @@ authrouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.status(400).send("invalid password");
     //token
     const token = jwt.sign({ _id: user._id }, process.env.token_sec);
-    res.send("logged in");
+    res.header('auth-token', token).send(token);
 }));
 exports.default = authrouter;

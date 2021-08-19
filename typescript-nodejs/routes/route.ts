@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 const router = express.Router();
 import Postschema from "../models/dbmodel";
+import Counterschema from "../models/counter";
+import mongoose from "mongoose";
 
 router.get("/", async (req: Request, res: Response) => {
   try {
@@ -13,9 +15,26 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
+  var latestCounter = await Counterschema.findOne({ type: "ORDER" });
+  console.log(latestCounter);
+  const counters = (latestCounter?.counter || 0) + 1;
+  console.log(counters);
+  const count = {
+    counter: counters,
+    type: "ORDER",
+  };
+  const count1 = new Counterschema(count);
+  count1.save();
+  await Counterschema.findOneAndUpdate(
+    { type: "ORDER" },
+    { counter: counters },
+    { returnOriginal: false }
+  );
+
+  console.log(latestCounter);
   const post = new Postschema({
-    orderNo: req.body.orderNo,
+    orderNo: counters,
     date: req.body.date,
     price: req.body.price,
     item: req.body.item,

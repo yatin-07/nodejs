@@ -4,10 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-let counter = 1;
-let CountedId = { type: Number, default: () => counter++ };
+//let counter = 1;
+//let CountedId = {type: Number, default: () => counter++};
 const Postschema = new mongoose_1.default.Schema({
-    orderNo: CountedId,
+    orderNo: {
+        type: Number,
+        //required: true,
+    },
     date: {
         type: Date,
         default: Date.now,

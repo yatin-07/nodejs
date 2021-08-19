@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const dbmodel_1 = __importDefault(require("../models/dbmodel"));
+const counter_1 = __importDefault(require("../models/counter"));
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const posts = yield dbmodel_1.default.find();
@@ -26,9 +27,26 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 }));
-router.post("/", (req, res) => {
+router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var latestCounter = yield counter_1.default.findOne({ type: "ORDER" });
+    console.log(latestCounter);
+    const counters = ((latestCounter === null || latestCounter === void 0 ? void 0 : latestCounter.counter) || 0) + 1;
+    console.log(counters);
+    const count = {
+        counter: counters,
+        type: "ORDER",
+    };
+    const count1 = new counter_1.default(count);
+    count1.save();
+    yield counter_1.default.findOneAndUpdate({ type: "ORDER" }, { counter: counters }, { returnOriginal: false });
+    //if(latestCounter===null)
+    //latestCounter=0;
+    //console.log(latestCounter);
+    //else
+    // latestCounter = latestCounter++;
+    console.log(latestCounter);
     const post = new dbmodel_1.default({
-        orderNo: req.body.orderNo,
+        orderNo: counters,
         date: req.body.date,
         price: req.body.price,
         item: req.body.item,
@@ -43,7 +61,8 @@ router.post("/", (req, res) => {
             message: err,
         });
     });
-});
+    // mongoose.set('returnOriginal', false);
+}));
 router.get("/:postId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const post = yield dbmodel_1.default.findById(req.params.postId);
