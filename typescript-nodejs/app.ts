@@ -10,6 +10,8 @@ import authrouter from "./routes/auth";
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use('/public', express.static('public'));
+app.use('/img', router);
 app.use("/user", authrouter);
 app.use("/posts", router);
 

@@ -3,6 +3,14 @@ const router = express.Router();
 import Postschema from "../models/dbmodel";
 import Counterschema from "../models/counter";
 import mongoose from "mongoose";
+import ImageSchema from "../models/images-model";
+import upload from "../middleware/multer-middleware";
+
+
+import multer from "multer";
+import path from "path";
+
+
 
 router.get("/", async (req: Request, res: Response) => {
   try {
@@ -15,9 +23,34 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+
+router.post('/Images', upload.single('profileImg'), (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host')
+  const image = new ImageSchema({
+    
+    _id: new mongoose.Types.ObjectId(),
+    name: req.body.name,
+    profileImg: url + '/public/'//+// req.file.filename
+});
+image.save().then(result => {
+    res.status(201).json({
+        message: "Image uploaded ",
+        userCreated: {
+            _id: result._id,
+            //profileImg: result.profileImg
+        }
+    })
+  }).catch(err => {
+    console.log(err),
+        res.status(500).json({
+            error: err
+        });
+})
+})
+
 router.post("/", async (req: Request, res: Response) => {
   var latestCounter = await Counterschema.findOne({ type: "ORDER" });
-  console.log(latestCounter);
+  
   const counters = (latestCounter?.counter || 0) + 1;
   console.log(counters);
   const count = {

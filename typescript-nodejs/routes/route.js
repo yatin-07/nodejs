@@ -16,6 +16,9 @@ const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const dbmodel_1 = __importDefault(require("../models/dbmodel"));
 const counter_1 = __importDefault(require("../models/counter"));
+const mongoose_1 = __importDefault(require("mongoose"));
+const images_model_1 = __importDefault(require("../models/images-model"));
+const multer_middleware_1 = __importDefault(require("../middleware/multer-middleware"));
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const posts = yield dbmodel_1.default.find();
@@ -27,9 +30,30 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 }));
+router.post('/Images', multer_middleware_1.default.single('profileImg'), (req, res, next) => {
+    const url = req.protocol + '://' + req.get('host');
+    const image = new images_model_1.default({
+        _id: new mongoose_1.default.Types.ObjectId(),
+        name: req.body.name,
+        profileImg: url + '/public/' //+// req.file.filename
+    });
+    image.save().then(result => {
+        res.status(201).json({
+            message: "Image uploaded ",
+            userCreated: {
+                _id: result._id,
+                //profileImg: result.profileImg
+            }
+        });
+    }).catch(err => {
+        console.log(err),
+            res.status(500).json({
+                error: err
+            });
+    });
+});
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var latestCounter = yield counter_1.default.findOne({ type: "ORDER" });
-    console.log(latestCounter);
     const counters = ((latestCounter === null || latestCounter === void 0 ? void 0 : latestCounter.counter) || 0) + 1;
     console.log(counters);
     const count = {
@@ -39,11 +63,6 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const count1 = new counter_1.default(count);
     count1.save();
     yield counter_1.default.findOneAndUpdate({ type: "ORDER" }, { counter: counters }, { returnOriginal: false });
-    //if(latestCounter===null)
-    //latestCounter=0;
-    //console.log(latestCounter);
-    //else
-    // latestCounter = latestCounter++;
     console.log(latestCounter);
     const post = new dbmodel_1.default({
         orderNo: counters,
@@ -61,7 +80,6 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             message: err,
         });
     });
-    // mongoose.set('returnOriginal', false);
 }));
 router.get("/:postId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
